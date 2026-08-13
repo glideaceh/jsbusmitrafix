@@ -1,4 +1,4 @@
-// Penambahan Style Kustom
+ // Penambahan Style Kustom
     if (!document.getElementById('customEnhancementStyles')) {
         let style = document.createElement('style');
         style.id = 'customEnhancementStyles';
@@ -207,8 +207,7 @@
     
     function renderNotifications() {
         let html = "";
-        // Menampilkan semua notifikasi dengan tidak lagi memfilter pesanan mitra/manual
-        let notifs = globalPesananList;
+        let notifs = globalPesananList.filter(o => o.role !== "Mitra" && !o.isManualLocal);
 
         let unreadCount = notifs.filter(o => o.notifStatus !== "terbuka").length;
         let bellBtn = document.getElementById('bellNotifBtn');
@@ -256,12 +255,6 @@
                 
                 let bgStyle = isBaru ? 'rgba(255,255,255,0.9)' : 'rgba(241, 245, 249, 0.7)';
                 let onClickFn = isBaru ? `onclick="handleNotifClick('${o.idBooking}')"` : ``;
-                
-                let isMitraOrder = (o.role === "Mitra" || o.isManualLocal);
-                let textNotif = isMitraOrder ? 
-                    `Pesanan baru telah ditambahkan oleh Mitra` : 
-                    `Anda mendapat pesanan kursi <b style="color:#0284c7;">${o.nomorKursi}</b>, dari <b style="text-transform:capitalize;">${o.namaPenumpang}</b>.`;
-
                 html += `
                 <div class="notif-card" ${onClickFn} style="background:${bgStyle}; opacity:${opacityStyle}; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(226,232,240,0.8); border-radius:12px; padding:15px; margin-bottom:12px; cursor:${cursorStyle}; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: 0.2s;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -269,7 +262,7 @@
                         <span style="font-size:10px; font-weight:700; color:#64748b;">${wktOrder} WIB</span>
                     </div>
                     <p style="margin:0; font-size:12px; color:#475569; line-height:1.6;">
-                        ${textNotif}<br>
+                        Anda mendapat pesanan kursi <b style="color:#0284c7;">${o.nomorKursi}</b>, dari <b style="text-transform:capitalize;">${o.namaPenumpang}</b>.<br>
                         <span style="font-size:11px; font-weight:600; color:#94a3b8; display:inline-block; margin-top:6px;"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i> Berangkat: ${tglOrder}</span>
                     </p>
                 </div>`;
@@ -774,8 +767,8 @@
         };
         reader.readAsDataURL(fileInput.files[0]);
     }
-
-    // =============================================
+    
+// =============================================
     // MODIFIKASI DRAW TOP UP & NOMINAL HANDLING
     // =============================================
     function openTopUpDrawer() {
@@ -1862,7 +1855,17 @@
             if (globalPesananList.length > 0 && result.length > globalPesananList.length) {
                 let newOrders = result.filter(r => !globalPesananList.some(g => g.idBooking === r.idBooking));
                 if (newOrders.length > 0) {
-                    showAlert("Pesanan Baru Masuk", `Terdapat ${newOrders.length} pesanan baru dari User.`, "fa-bell");
+                    let userOrdersCount = newOrders.filter(o => o.role !== "Mitra" && !o.isManualLocal).length;
+                    let mitraOrdersCount = newOrders.filter(o => o.role === "Mitra" || o.isManualLocal).length;
+
+                    if (userOrdersCount > 0) {
+                        showAlert("Pesanan Baru Masuk", `Terdapat ${userOrdersCount} pesanan baru dari User.`, "fa-bell");
+                    }
+                    if (mitraOrdersCount > 0) {
+                        setTimeout(() => {
+                            showAlert("Pesanan Baru Masuk", `Terdapat ${mitraOrdersCount} Pesanan baru telah ditambahkan oleh Mitra.`, "fa-bell");
+                        }, userOrdersCount > 0 ? 4000 : 0);
+                    }
       
                     let bellBtn = document.getElementById('bellNotifBtn');
                     if (bellBtn) {
