@@ -1184,14 +1184,13 @@
                 if(newOrder) { 
                     selectedManualSeats = [];
                     renderSeatLayout(); closeManualPaymentModal(); 
-                    showAlert("Sukses", "Pesanan berhasil diproses.", "fa-check"); 
                     
                     if(komisi > 0) {
                         SESSION_COMPANY.saldo -= komisi;
-                        setTimeout(() => {
-                            showAlert("Pemotongan Saldo", `Saldo terpotong otomatis Rp ${formatNumber(komisi)} untuk komisi transaksi manual.`, "fa-file-invoice-dollar", false);
-                            updateHeaderSchemeUI();
-                        }, 4500);
+                        showAlert("Pemotongan Saldo", `Saldo terpotong otomatis Rp ${formatNumber(komisi)} untuk komisi transaksi manual.`, "fa-file-invoice-dollar", false);
+                        updateHeaderSchemeUI();
+                    } else {
+                        showAlert("Sukses", "Pesanan berhasil diproses.", "fa-check"); 
                     }
 
                     lastGeneratedTicket = newOrder;
@@ -1200,13 +1199,13 @@
                     newOrder = { idBooking: generatedId ||
                     "MENUNGGU_SINKRONISASI", userId: "MANUAL", role: "Mitra", merkKendaraan: payload.merkKendaraan, tanggalBooking: payload.tanggalBooking, nomorKursi: payload.nomorKursi, namaPenumpang: payload.namaPenumpang, namaPerusahaan: payload.namaPerusahaan, noHp: payload.noHp, harga: payload.harga, asal: payload.asal, tujuan: payload.tujuan, statusBooking: payload.statusBooking, isManualLocal: true };
                     globalPesananList.push(newOrder); selectedManualSeats = []; renderSeatLayout(); closeManualPaymentModal(); 
-                    showAlert("Sukses", "Pesanan diproses, memuat sinkronisasi.", "fa-check");
+                    
                     if(komisi > 0) {
                         SESSION_COMPANY.saldo -= komisi;
-                        setTimeout(() => {
-                            showAlert("Pemotongan Saldo", `Saldo terpotong otomatis Rp ${formatNumber(komisi)} untuk komisi transaksi manual.`, "fa-file-invoice-dollar", false);
-                            updateHeaderSchemeUI();
-                        }, 4500);
+                        showAlert("Pemotongan Saldo", `Saldo terpotong otomatis Rp ${formatNumber(komisi)} untuk komisi transaksi manual.`, "fa-file-invoice-dollar", false);
+                        updateHeaderSchemeUI();
+                    } else {
+                        showAlert("Sukses", "Pesanan diproses, memuat sinkronisasi.", "fa-check");
                     }
                     
                     lastGeneratedTicket = newOrder;
@@ -1333,7 +1332,6 @@
                 });
                 wrap.appendChild(left);
                 wrap.appendChild(right);
-                contentContainer.appendChild(wrap);
                 contentContainer.classList.add('restructured');
 
                 let mobileBtn = document.createElement('button');
@@ -1999,7 +1997,7 @@
         if(res.status === "success") { showAlert("Terhapus", "Data dihapus.", "fa-trash"); closePengaturanModal(); loadLayananData(); } else { showAlert("Gagal", res.message, "fa-circle-xmark", true);
         } } catch(e) { showLoading(false); showAlert("Koneksi Error", e.message, "fa-wifi", true); } }
 
-    async function openEditLayananForm() { closePengaturanModal();
+     async function openEditLayananForm() { closePengaturanModal();
         try { const item = globalLayananList[activeLayananIndex]; oldMerkForEdit = item.merk; oldJamBForEdit = item.jamBerangkat; selectedVehicleTypeName = item.jenis; document.getElementById('editMerk').value = item.merk || '';
         document.getElementById('editKapasitas').value = item.kapasitas || ''; document.getElementById('editHarga').value = item.harga || ''; document.getElementById('editAsal').value = item.asal || ''; document.getElementById('editTujuan').value = item.tujuan || '';
         document.getElementById('editJamB').value = item.jamBerangkat || ''; document.getElementById('editJamS').value = item.jamSampai || ''; document.getElementById('editFasilitas').value = item.fasilitas || ''; selectedFasilitasArray = item.fasilitas ?
