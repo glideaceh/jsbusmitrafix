@@ -79,7 +79,7 @@
         }
     }
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz9oI7WVGzV2nrgAyW965T_2XKw7uxHYkU13ouJVlb8iRzmnVXEPGhDvqtNjxOnKQsYLg/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyQmqVbQBfsHdZmgqnIOfjXdBy11IMcq7Obx6qhWgupqFB42zZqT6SwrsZqtnDtjbGl8Q/exec";
     let SESSION_USER = null;
     let SESSION_COMPANY = null;
     let globalRekeningList = [];
